@@ -1,0 +1,27 @@
+name: "Ruby on Rails CI"
+on:
+  pull_request:
+    branches:
+      - master
+      - development
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Add or replace dependency steps here
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e # v1.92
+        with:
+          bundler-cache: true
+      - name: Set up test DB
+        run: |
+          chmod u+x bin/rails
+          bin/rails db:migrate
+          bin/rails db:test:prepare
+      # Add or replace test runners here
+      - name: Run tests
+        run: |
+          chmod u+x bin/rails
+          bin/rails test
